@@ -1,0 +1,17 @@
+sort=-time
+layer=overlay
+default-timeout=5000
+ignore-timeout=1
+background-color=#191724
+border-size=3
+border-color=#ebbcba
+height=200
+margin=5
+padding=10
+max-icon-size=48
+font=JetBrains Nerd Font Mono 11
+text-color=#e0def4
+
+[urgency=high]
+border-color=#eb6f92
+default-timeout=0

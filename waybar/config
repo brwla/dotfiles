@@ -1,0 +1,174 @@
+{
+    "layer": "top",
+    "output": "eDP-1",
+    "position": "right",
+    "spacing": 4,
+    "width": 30,
+    "margin-top": 10,
+    "margin-bottom": 10,
+    "margin-right": 10,
+    "fixed-center": "true",
+    "modules-left": ["hyprland/workspaces"],
+    "modules-center": ["clock"],
+    "modules-right": ["tray", "group/backlight", "group/audio", "group/system","group/powermenu"],
+
+    // Modules configuration
+    "hyprland/workspaces": {
+    	"format": "{icon}",
+      "persistent-workspaces": {
+        "*": 3 
+      },
+      "format-icons": {
+        "default": "",
+        "active": "",
+        "empty": ""    
+      }
+    },
+    "clock": {
+    	"format": "{:%H\n%M}",
+        "tooltip-format": "<tt><small>{calendar}</small></tt>",
+        "calendar": {
+            "format": {
+                "months":     "<span color='#D3C6AA'><b>{}</b></span>",
+                "days":       "<span color='#D3C6AA'>{}</span>",
+                "weekdays":   "<span color='#DBBC7F'><b>{}</b></span>",
+                "today":      "<span color='#A7C080'><b><u>{}</u></b></span>"
+            }
+        }
+    },
+    "group/system": {
+        "orientation": "inherit",
+        "drawer": {
+            "transition-duration": 500,
+            "children-class": "not-battery",
+            "transition-left-to-right": false,
+        },
+        "modules": [
+            "battery", 
+            "idle_inhibitor",
+            "network"
+        ]
+    },
+    "group/backlight": {
+        "orientation": "inherit",
+        "drawer": {
+            "transition-duration": 500,
+            "children-class": "not-backlight",
+            "transition-left-to-right": false,
+        },
+        "modules": [
+            "backlight",
+            "backlight/slider",
+        ]
+    },
+    "backlight/slider": {
+        "min": 0,
+        "max": 100,
+        "orientation": "vertical",
+        "device": "intel_backlight"
+    },
+    "backlight": {
+        "format": "{icon}",
+        "format-icons": ["󰃝"],
+        "tooltip": false
+    },
+    "battery": {
+        "states": {
+            "warning": 30,
+            "critical": 15
+        },
+        "format": "{icon}",
+        "format-full": "󰁹",
+        "format-charging": "󰂄",
+        "format-plugged": "",
+        "tooltip-format": "{capacity}%",
+        "format-icons": ["󰁺", "󰁻", "󰁼", "󰁽", "󰁾", "󰁿", "󰂀", "󰂁", "󰂂"]
+    },
+    "network": {
+        "format-wifi": "󰖩",
+        "format-ethernet": "󰈀",
+        "format-disconnected": "󰖪",
+        "tooltip-format": "{ifname} via {gwaddr}",
+        "tooltip-format-wifi": "{essid} {signalStrength}%",
+        "tooltip-format-ethernet": "{ifname}: {ipaddr}/{cidr}",
+        "tooltip-format-disconnected": "Disconnected"
+    },
+    "group/audio": {
+        "orientation": "inherit",
+        "drawer": {
+            "transition-duration": 500,
+            "children-class": "not-audio",
+            "transition-left-to-right": false,
+        },
+        "modules": [
+            "pulseaudio",
+            "pulseaudio/slider"
+        ]
+    },
+    "pulseaudio": {
+        "format": "{icon}",
+        "format-muted": "󰝟",
+        "format-icons": {
+            "headphone": "󰋋",
+            "hands-free": "󰓃",
+            "headset": "󰋋",
+            "phone": "",
+            "portable": "",
+            "car": "",
+            "default": ["󰕾"]
+        },
+        "scroll-step": 1,
+        "on-click": "pactl set-sink-mute @DEFAULT_SINK@ toggle",
+        "tooltip": false
+    },
+    "pulseaudio/slider": {
+        "min": 0,
+        "max": 100,
+        "orientation": "vertical"
+    },
+    "tray": {
+        "icon-size": 14,
+        "spacing": 10
+    },
+    "idle_inhibitor": {
+        "format": "{icon}",
+        "format-icons": {
+            "activated": "󰛐",
+            "deactivated": "󰈉"
+        }
+    },
+    "group/powermenu": {
+    "orientation": "inherit",
+        "drawer": {
+            "transition-duration": 500,
+            "children-class": "not-power",
+            "transition-left-to-right": false
+        },
+        "modules": [
+            "custom/power",
+            "custom/quit",
+            "custom/lock",
+            "custom/reboot"
+        ]
+    },
+    "custom/quit": {
+        "format": "󰗽",
+        "tooltip": false,
+        "on-click": "hyprctl dispatch exit"
+    },
+    "custom/lock": {
+        "format": "󰍁",
+        "tooltip": false,
+        "on-click": "swaylock"
+    },
+    "custom/reboot": {
+        "format": "",
+        "tooltip": false,
+        "on-click": "reboot"
+    },
+    "custom/power": {
+        "format": "",
+        "tooltip": false,
+        "on-click": "shutdown now"
+    }
+}

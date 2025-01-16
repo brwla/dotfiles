@@ -1,0 +1,15 @@
+#!/bin/sh
+while true; do
+  bat_lvl=$(cat /sys/class/power_supply/BAT0/capacity)
+  bat_stats=$(cat /sys/class/power_supply/BAT0/status)
+
+  if [ "$bat_lvl" -le 25 ] && [ "$bat_stats" = "Discharging" ]; then
+    notify-send --urgency=CRITICAL "Battery Low" "Level: ${bat_lvl}%"
+    sleep 1200
+  elif [ "$bat_lvl" -eq 100 ] && [ "$bat_stats" = "Not charging" ]; then
+    notify-send "Fully Charged" "Level: ${bat_lvl}%"
+    sleep 1200
+  else
+    sleep 120
+  fi
+done

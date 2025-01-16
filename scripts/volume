@@ -1,0 +1,59 @@
+!/usr/bin/env bash
+
+# Get Volume
+get_volume() {
+	echo $(wpctl get-volume @DEFAULT_SINK@)
+}
+
+get_mic_mute() {
+    echo $(wpctl get-mute @DEFAULT_AUDIO_SOURCE@)
+}
+
+# Notify
+notify_user() {
+	notify-send -h string:x-canonical-private-synchronous:sys-notify -u low "$(get_volume)"
+}
+
+# Increase Volume
+inc_volume() {
+	wpctl set-volume -l 1.5 @DEFAULT_AUDIO_SINK@ 1%+ && notify_user
+}
+
+# Decrease Volume
+dec_volume() {
+	wpctl set-volume @DEFAULT_AUDIO_SINK@ 1%- && notify_user
+}
+
+# Toggle Mute
+toggle_mute() {
+	wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle && notify_user
+}
+
+toggle_mic_mute() {
+    wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle && notify_user
+}
+
+# Execute accordingly
+case "$1" in
+    --get)
+        get_volume
+        ;;
+    --inc)
+        inc_volume
+        ;;
+    --dec)
+        dec_volume
+        ;;
+    --toggle)
+        toggle_mute
+        ;;
+    --mic-get)
+        get_mic_mute
+        ;;
+    --mic-toggle)
+        toggle_mic_mute
+        ;;
+    *)
+        get_volume
+        ;;
+esac
