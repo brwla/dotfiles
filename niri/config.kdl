@@ -12,17 +12,12 @@ input {
     focus-follows-mouse max-scroll-amount="0%"
 }
 
-output "eDP-1" {
-    mode "1366x768"
-    scale 1
-    transform "normal"
-    position x=1280 y=0
-}
-
 layout {
+    background-color "transparent"
+
     gaps 16
     center-focused-column "never"
-    empty-workspace-above-first
+    // empty-workspace-above-first
 
     preset-column-widths {
         proportion 0.33333
@@ -38,13 +33,30 @@ layout {
 
     border {
         width 3
-        active-color "#ebbcba"
+        active-color "#f6c177"
         inactive-color "#191724"
+        urgent-color "#eb6f92"
+    }
+
+    tab-indicator {
+        hide-when-single-tab
+        gap 5
+        position "right"
+        gaps-between-tabs 3
+        inactive-color "gray"
+    }
+
+    /-shadow {
+        on
+        softness 30
+        spread 5
+        offset x=0 y=5
+        color "#0007"
     }
 }
 
 spawn-at-startup "swww-daemon"
-spawn-at-startup "~/.config/scripts/low_battery"
+spawn-at-startup "~/.config/scripts/battery_alert"
 spawn-at-startup "xwayland-satellite"
 
 prefer-no-csd
@@ -55,6 +67,7 @@ environment {
     DISPLAY ":0"
     ELECTRON_OZONE_PLATFORM_HINT "auto"
     QT_QPA_PLATFORM "wayland"
+    QT_STYLE_OVERRIDE "kvantum"
 }
 
 hotkey-overlay {
@@ -66,10 +79,10 @@ cursor {
     xcursor-size 20
 }
 
-// window-rule {
-//     geometry-corner-radius 10
-//     clip-to-geometry true
-// }
+/-window-rule {
+    geometry-corner-radius 10
+    clip-to-geometry true
+}
 
 window-rule {
     match app-id=r#"^org\.keepassxc\.KeePassXC$"#
@@ -80,21 +93,35 @@ window-rule {
     match title="^Picture-in-Picture$"
     open-floating true
     open-focused false
-    default-floating-position x=20 y=20 relative-to="top-right"
+    default-floating-position x=10 y=10 relative-to="top-right"
+    default-column-width { proportion 0.35; }
+    default-window-height { proportion 0.35; }
 }
 
-// window-rule {
-//     match title="Bottles"
-//     match title="HoYoPlay"
-//     open-maximized true
-// }
+layer-rule {
+    match namespace="^swww-daemon$"
+    place-within-backdrop true
+}
+
+overview {
+    workspace-shadow {
+      spread 30
+    }
+}
+
+gestures {
+    hot-corners {
+        off
+    }
+}
 
 binds {
     Mod+Shift+Slash { show-hotkey-overlay; }
 
-    Mod+T { spawn "kitty"; }
-    Mod+D { spawn "fuzzel"; }
-    Super+Alt+L { spawn "swaylock"; }
+    Mod+T hotkey-overlay-title="Open a Terminal" { spawn "kitty"; }
+    Mod+D hotkey-overlay-title="Run an Application" { spawn "fuzzel"; }
+    Super+Alt+L hotkey-overlay-title="Lock the Screen" { spawn "swaylock"; }
+    Mod+B { spawn "firefox"; }
 
     XF86AudioRaiseVolume allow-when-locked=true { spawn "~/.config/scripts/volume" "--inc"; }
     XF86AudioLowerVolume allow-when-locked=true { spawn "~/.config/scripts/volume" "--dec"; }
@@ -103,6 +130,8 @@ binds {
 
     XF86MonBrightnessUp { spawn "~/.config/scripts/backlight" "--inc"; }
     XF86MonBrightnessDown { spawn "~/.config/scripts/backlight" "--dec"; }
+
+    Mod+Tab { toggle-overview; }
 
     Mod+Q { close-window; }
 
@@ -204,9 +233,14 @@ binds {
     Mod+R { switch-preset-column-width; }
     Mod+Shift+R { switch-preset-window-height; }
     Mod+Ctrl+R { reset-window-height; }
+
     Mod+F { maximize-column; }
     Mod+Shift+F { fullscreen-window; }
+    Mod+Ctrl+F { expand-column-to-available-width; }
+    Mod+Ctrl+Shift+F { toggle-windowed-fullscreen; }
+
     Mod+C { center-column; }
+    Mod+Ctrl+C { center-visible-columns; }
 
     Mod+Minus { set-column-width "-10%"; }
     Mod+Equal { set-column-width "+10%"; }
@@ -217,9 +251,13 @@ binds {
     Mod+V       { toggle-window-floating; }
     Mod+Shift+V { switch-focus-between-floating-and-tiling; }
 
+    Mod+W { toggle-column-tabbed-display; }
+
     Print { screenshot; }
     Ctrl+Print { screenshot-screen; }
     Alt+Print { screenshot-window; }
+
+    Mod+Escape allow-inhibiting=false { toggle-keyboard-shortcuts-inhibit; }
 
     Mod+Shift+E { quit; }
     Ctrl+Alt+Delete { quit; }

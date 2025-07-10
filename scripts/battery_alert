@@ -10,6 +10,6 @@ while true; do
     notify-send "Fully Charged" "Level: ${bat_lvl}%"
     sleep 1200
   else
-    sleep 120
+    sleep 60
   fi
 done
