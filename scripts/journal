@@ -1,0 +1,69 @@
+#!/usr/bin/sh
+
+dir="$HOME/Documents/Journals"
+entry_date=$(date "+%Y-%m-%d")
+title="# $(date '+%B %d, %Y')"
+
+mkdir -p "$dir"
+
+write() {
+    if [ ! -f "$dir/$entry_date.md" ]; then
+        echo "$title" >> "$dir/$entry_date.md"
+    fi
+    nvim "$dir/$entry_date.md"
+}
+
+yesterday() {
+    entry_date=$(date -d "yesterday" "+%Y-%m-%d")
+    title="# $(date -d 'yesterday' '+%B %d, %Y')"
+    write
+}
+
+custom() {
+    if ! entry_date=$(date -d "$1" "+%Y-%m-%d" 2>/dev/null); then
+        echo "Error: Invalid date format."
+        usage
+        exit 1
+    fi
+    title="# $(date -d "$1" '+%B %d, %Y')"
+    write
+}
+
+usage() {
+    echo "Usage: $0 [OPTION] [ARGUMENT]"
+    echo
+    echo "Options:"
+    echo "  --today            Write today's journal entry (default)"
+    echo "  -y, --yesterday    Write yesterday's journal entry"
+    echo "  -c, --custom DATE  Write a journal entry for a custom date (e.g., 'Dec 25 2025')"
+    echo
+    echo "Examples:"
+    echo "  $0                    # Write today's journal entry"
+    echo "  $0 -y                 # Write yesterday's journal entry"
+    echo "  $0 -c 'Dec 25 2025'   # Write a journal entry for December 25, 2025"
+}
+
+case "$1" in
+    --help | -h)
+        usage
+        ;;
+    --today | "")
+        write
+        ;;
+    --yesterday | -y)
+        yesterday
+        ;;
+    --custom | -c)
+        if [ -z "$2" ]; then
+            echo "Error: Please provide a date for the custom option."
+            usage
+            exit 1
+        fi
+        custom "$2"
+        ;;
+    *)
+        echo "Error: Unknown option: $1"
+        usage
+        exit 1
+        ;;
+esac
