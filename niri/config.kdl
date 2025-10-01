@@ -57,14 +57,12 @@ layout {
 
 spawn-at-startup "swww-daemon"
 spawn-at-startup "~/.config/scripts/battery_alert"
-spawn-at-startup "xwayland-satellite"
 
 prefer-no-csd
 
 screenshot-path "~/Pictures/Screenshots/Screenshot_%Y-%m-%d_%H-%M-%S.png"
 
 environment {
-    DISPLAY ":0"
     ELECTRON_OZONE_PLATFORM_HINT "auto"
     QT_QPA_PLATFORM "wayland"
     QT_STYLE_OVERRIDE "kvantum"
@@ -122,14 +120,17 @@ binds {
     Mod+D hotkey-overlay-title="Run an Application" { spawn "fuzzel"; }
     Super+Alt+L hotkey-overlay-title="Lock the Screen" { spawn "swaylock"; }
     Mod+B { spawn "firefox"; }
+    Mod+Shift+B { spawn "librewolf"; }
+
+    Super+Alt+S allow-when-locked=true hotkey-overlay-title=null { spawn-sh "pkill orca || exec orca"; }
 
     XF86AudioRaiseVolume allow-when-locked=true { spawn "~/.config/scripts/volume" "--inc"; }
     XF86AudioLowerVolume allow-when-locked=true { spawn "~/.config/scripts/volume" "--dec"; }
     XF86AudioMute        allow-when-locked=true { spawn "~/.config/scripts/volume" "--toggle"; }
     XF86AudioMicMute     allow-when-locked=true { spawn "~/.config/scripts/volume" "--mic-toggle"; }
 
-    XF86MonBrightnessUp { spawn "~/.config/scripts/backlight" "--inc"; }
-    XF86MonBrightnessDown { spawn "~/.config/scripts/backlight" "--dec"; }
+    XF86MonBrightnessUp allow-when-locked=true { spawn "~/.config/scripts/backlight" "--inc"; }
+    XF86MonBrightnessDown allow-when-locked=true { spawn "~/.config/scripts/backlight" "--dec"; }
 
     Mod+Tab { toggle-overview; }
 
